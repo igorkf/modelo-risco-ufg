@@ -1,0 +1,25 @@
+---
+title: "Modelo de Risco"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+
+### Lendo conjunto de dados
+```{r}
+
+tab <- read_delim('dados4_ok.txt', delim = ';', col_types = cols(), progress = F)
+tab
+
+```
+
+
+
