@@ -14,12 +14,77 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ### Lendo conjunto de dados
+Na tabela, cada linha representa um contrato diferente.       
 ```{r}
 
-tab <- read_delim('dados4_ok.txt', delim = ';', col_types = cols(), progress = F)
+# lê conjunto de dados e transforma colunas de datas no formato ideal
+tab <- read_delim('dados4_ok.txt', delim = ';', col_types = cols(), progress = F) %>% 
+  mutate_at(vars(contains('Data')), ~as.Date(., format = '%d/%m/%Y'))
+
 tab
 
 ```
+
+    
+### Dicionário de variáveis
+   
+- ID: identificação do contrato    
+
+- No_parcelas: número de parcelas do contrato    
+
+- Data_Compra: data da compra    
+
+- Valor_Parcela: valor da parcela    
+
+- DataVi: data de vencimento da i-ésima parcela    
+
+- DataPi: data de pagamento da i-ésima parcela 
+
+
+### Limpeza dos dados   
+Cerca de 15 mil contratos nunca foram comprados, pois o valor Data_Compra é nulo. Por este motivo, podemos eliminar estes
+contratos da tabela.      
+```{r}
+
+tab <- tab %>%  
+  filter(is.na(Data_Compra) == F)
+
+tab
+
+```
+
+
+
+
+
+<!-- # comentei essa parte porque não precisamos mais usar dias de atraso -->
+<!-- ### Calculando atrasos para cada possível parcela -->
+<!-- ```{r, warning = F} -->
+
+<!-- # instancia lista vazia -->
+<!-- atrasos <- list() -->
+
+<!-- # para cada parcela (0 a 14, que é equivalente a 1 a 15) -->
+<!-- for (i in 0:14) { -->
+
+<!--   # calcula atraso (em dias) da i-ésima parcela -->
+<!--   atrasos[[i + 1]] <- as_vector(tab[, i + 5] - tab[, i + 20]) -->
+
+<!--   # se for negativo, então é atraso, senão transforma em 0 (sem atrasos) -->
+<!--   atrasos[[i + 1]] <- ifelse(atrasos[[i + 1]] < 0, atrasos[[i + 1]] * -1, 0) -->
+<!-- } -->
+
+<!-- # cria novas colunas de atraso na tabela original -->
+<!-- tab <- bind_cols(tab,  -->
+<!--   (bind_cols(atrasos) %>%  -->
+<!--     set_names(paste0('atraso', 1:length(atrasos)))) -->
+<!-- ) -->
+
+
+<!-- ``` -->
+
+
+
 
 
 
