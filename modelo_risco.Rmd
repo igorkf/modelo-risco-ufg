@@ -54,6 +54,26 @@ tab
 ```
 
 
+### Criando variável resposta
+Se um cliente, por exemplo, tem 5 parcelas, mas ao final do seu contrato pagou somente 4 parcelas, então
+será considerado um inadimplente. Caso contrário, será adimplente.     
+Vamos representar 1 como inadimplente. 
+
+```{r}
+
+# conta quantidade de pagamentos não nulos, por contrato
+tab$no_pagamentos <- rowSums(!is.na(select(tab, contains('DataP'))))
+
+# cria variável resposta
+tab <- tab %>% 
+  mutate(inadimplente = ifelse(no_pagamentos < No_parcelas, 1, 0))
+
+# mostrando alguns inadimplentes
+tab %>% 
+  filter(inadimplente == 1)
+
+```
+
 
 
 
